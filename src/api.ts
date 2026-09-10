@@ -7,6 +7,8 @@ export type Trainer = {
 };
 export type Dashboard = { pendentes: number; aprovados: number; suspensos: number; totalUsuarios: number; acoesRecentes: number };
 export type AuditLog = { idLog: string; idAdmin: string; idUsuarioAlvo: string; acao: string; justificativa: string; criadoEm: string };
+export type TrainerDashboard = { totalAlunos: number; treinosAtivos: number; solicitacoesPendentes: number; fichasParaRevisar: number };
+export type Student = { idAluno: string; nome: string; email: string; telefone: string | null; ativo: boolean };
 
 const baseUrl = (import.meta.env.VITE_API_URL || 'https://api-setta.varten.com.br/api').replace(/\/$/, '');
 
@@ -36,4 +38,6 @@ export const api = {
   suspension: (token: string, id: string, acao: 'SUSPENDER' | 'REATIVAR', justificativa: string) => request<Trainer>(`/admin/treinadores/${id}/suspensao`, { method: 'PATCH', body: JSON.stringify({ acao, justificativa }) }, token),
   logs: (token: string) => request<AuditLog[]>('/admin/logs', {}, token),
   system: (token: string) => request<{ api: string; version: string; environment: string }>('/admin/sistema', {}, token),
+  trainerDashboard: (token: string) => request<TrainerDashboard>('/treinador/dashboard', {}, token),
+  students: (token: string) => request<Student[]>('/treinador/alunos', {}, token),
 };

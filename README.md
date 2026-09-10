@@ -1,6 +1,6 @@
-# Setta Admin
+# Setta Portal
 
-Painel administrativo privado do Setta, construído em React, TypeScript e Vite.
+Portal web do Setta para a administração da plataforma e a operação dos treinadores, construído em React, TypeScript e Vite.
 
 ## Desenvolvimento
 
