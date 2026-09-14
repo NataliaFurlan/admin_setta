@@ -91,6 +91,26 @@
   font-size: 0.68rem;
   margin-top: -8px;
 }
+.open-app {
+  display: grid;
+  gap: 12px;
+  margin-top: 26px;
+  text-align: center;
+}
+.open-app .primary-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  text-decoration: none;
+}
+.open-app .primary-button svg {
+  width: 19px;
+}
+.open-app span {
+  color: var(--muted);
+  font-size: 0.72rem;
+}
 @media (max-width: 760px) {
   .title-action {
     display: block;

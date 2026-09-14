@@ -15,6 +15,7 @@ import {
   Plus,
   Search,
   ShieldCheck,
+  Smartphone,
   UserCheck,
   UserRoundX,
   Users,
@@ -882,18 +883,36 @@ function InvitePage() {
   const [confirm, setConfirm] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const appLink = `setta://convite/${encodeURIComponent(token)}`;
   useEffect(() => {
     api
       .invite(token)
       .then(setData)
       .catch((e) => setError(e.message));
   }, [token]);
+  useEffect(() => {
+    if (!isMobile || !token) return;
+    const timer = window.setTimeout(() => window.location.assign(appLink), 350);
+    return () => window.clearTimeout(timer);
+  }, [appLink, isMobile, token]);
   async function submit(e: FormEvent) {
     e.preventDefault();
     if (senha !== confirm) {
       setError("As senhas não coincidem.");
       return;
     }
+    if (
+      senha.length < 8 ||
+      !/[A-Z]/.test(senha) ||
+      !/[a-z]/.test(senha) ||
+      !/[0-9]/.test(senha)
+    ) {
+      setError("Use 8 caracteres, com maiúscula, minúscula e número.");
+      return;
+    }
+    setLoading(true);
     try {
       const result = await api.acceptInvite(token, senha);
       setMessage(result.message);
@@ -902,6 +921,8 @@ function InvitePage() {
       setError(
         e instanceof Error ? e.message : "Não foi possível aceitar o convite.",
       );
+    } finally {
+      setLoading(false);
     }
   }
   return (
@@ -920,9 +941,7 @@ function InvitePage() {
           <>
             <h1>Conta criada.</h1>
             <p>{message}</p>
-            <a className="primary-link" href="/">
-              Entrar no Setta →
-            </a>
+            <p>Agora você já pode entrar no aplicativo Setta com seu e-mail e sua nova senha.</p>
           </>
         ) : data ? (
           <>
@@ -931,6 +950,14 @@ function InvitePage() {
               Você foi convidado para acompanhar seus treinos no Setta usando{" "}
               <strong>{data.email}</strong>.
             </p>
+            {isMobile && (
+              <div className="open-app">
+                <a className="primary-button" href={appLink}>
+                  <Smartphone /> Abrir no aplicativo
+                </a>
+                <span>ou continue pelo navegador</span>
+              </div>
+            )}
             <form onSubmit={submit}>
               <label>
                 Crie sua senha
@@ -956,7 +983,9 @@ function InvitePage() {
                 />
               </label>
               {error && <div className="error">{error}</div>}
-              <button className="primary-button">Criar minha conta →</button>
+              <button className="primary-button" disabled={loading}>
+                {loading ? "Criando conta…" : "Criar minha conta →"}
+              </button>
             </form>
           </>
         ) : (
