@@ -40,6 +40,8 @@ import {
   TrainerStatus,
 } from "./api";
 
+import { WorkoutPanel, TrainerWorkouts } from "./WorkoutPanel";
+
 const TOKEN_KEY = "setta_admin_session";
 const ROLE_KEY = "setta_portal_role";
 const getToken = () => sessionStorage.getItem(TOKEN_KEY);
@@ -62,7 +64,7 @@ function Login({
 }: {
   onLogin: (role: "ADMIN" | "TREINADOR") => void;
 }) {
-  const [email, setEmail] = useState("nataliafurlan88@gmail.com");
+  const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -102,9 +104,9 @@ function Login({
           <div className="login-icon">
             <ShieldCheck />
           </div>
-          <p className="eyebrow dark">ÁREA ADMINISTRATIVA</p>
+          <p className="eyebrow dark">PORTAL SETTA</p>
           <h2>Bem-vinda de volta.</h2>
-          <p className="muted">Use sua conta administrativa para continuar.</p>
+          <p className="muted">Use sua conta de treinador ou administrador para continuar.</p>
           <label>
             E-mail
             <input
@@ -153,7 +155,7 @@ function Shell({
           <span>S/</span> Setta{" "}
           <em>{role === "ADMIN" ? "Admin" : "Treinador"}</em>
         </div>
-        <nav>
+        <nav onClick={() => setOpen(false)}>
           {role === "ADMIN" ? (
             <>
               <NavLink to="/admin">
@@ -195,7 +197,7 @@ function Shell({
       </aside>
       <div className="content">
         <header className="mobile-header">
-          <button onClick={() => setOpen(!open)}>
+          <button aria-label={open ? "Fechar menu" : "Abrir menu"} aria-expanded={open} onClick={() => setOpen(!open)}>
             <Menu />
           </button>
           <div className="wordmark">
@@ -1052,6 +1054,7 @@ function TrainerStudentDetail() {
               </div>
             </dl>
           </section>
+          <WorkoutPanel key={id} token={token} studentId={id} />
         </>
       ) : (
         <div className="empty">Carregando perfil…</div>
@@ -1167,7 +1170,7 @@ export default function App() {
           path="/treinador/fichas"
           element={
             role === "TREINADOR" ? (
-              <TrainerComingSoon type="fichas" />
+              <TrainerWorkouts token={getToken()!} />
             ) : (
               <Navigate to={home} replace />
             )

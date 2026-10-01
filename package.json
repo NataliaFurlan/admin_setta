@@ -5,9 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && node scripts/write-release-version.cjs dist/release-version.json",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "release:plan": "python3 scripts/release.py --plan",
+    "release:check": "python3 scripts/release.py --check",
+    "release:prod": "python3 scripts/release.py --publish"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",

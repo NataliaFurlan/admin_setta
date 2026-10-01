@@ -97,7 +97,66 @@ async function request<T>(
   return data as T;
 }
 
+export type WorkoutPrescription = {
+  nome: string;
+  series: number;
+  repeticoesMin: number;
+  repeticoesMax: number;
+  carga?: number;
+  rir?: number;
+  descansoSegundos?: number;
+  observacao?: string;
+};
+export type WorkoutSheet = {
+  idFichaTreino: string;
+  nome: string;
+  descricao: string | null;
+  exercicios: (WorkoutPrescription & { idExercicioFicha: string })[];
+};
+export type WorkoutHistory = {
+  idExecucaoTreino: string;
+  ficha: string;
+  finalizadaEm: string;
+  duracaoSegundos: number | null;
+  observacao: string | null;
+  exercicios: number;
+  volume: number;
+  detalhes: {
+    idExercicioFicha: string;
+    nome: string;
+    prescricao: WorkoutPrescription;
+    series: {
+      numero: number;
+      repeticoes: number;
+      carga: number | null;
+      rir: number | null;
+    }[];
+    agregado: {
+      series: number;
+      repeticoes: number;
+      carga: number | null;
+    } | null;
+  }[];
+};
 export const api = {
+  workoutCurrent: (token: string, id: string) =>
+    request<WorkoutSheet>(`/treinador/alunos/${id}/ficha-atual`, {}, token),
+  workoutHistory: (token: string, id: string) =>
+    request<WorkoutHistory[]>(`/treinador/alunos/${id}/historico`, {}, token),
+  workoutPublish: (
+    token: string,
+    id: string,
+    data: {
+      nome: string;
+      descricao: string;
+      exercicios: WorkoutPrescription[];
+    },
+  ) =>
+    request<WorkoutSheet>(
+      `/treinador/alunos/${id}/fichas`,
+      { method: "POST", body: JSON.stringify(data) },
+      token,
+    ),
   login: (email: string, senha: string) =>
     request<{ token: string; tipo: string; nome: string }>("/auth/login", {
       method: "POST",

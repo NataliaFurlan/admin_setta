@@ -1,0 +1,8 @@
+{
+  "method": "hostinger-git",
+  "branch": "prod",
+  "auto_deploy_confirmed": false,
+  "commit_verification": false,
+  "verification_url": "https://admin-setta.varten.com.br/release-version.json",
+  "timeout_seconds": 300
+}

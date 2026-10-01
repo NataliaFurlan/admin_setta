@@ -5,3 +5,7 @@ dist/
 !.env.example
 .DS_Store
 *.tsbuildinfo
+.releases/
+.deploy.local.json
+__pycache__/
+*.pyc

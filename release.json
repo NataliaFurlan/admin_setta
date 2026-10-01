@@ -1,0 +1,5 @@
+{
+  "name": "setta-portal",
+  "kind": "portal",
+  "api_url": "https://api-setta.varten.com.br/api"
+}
